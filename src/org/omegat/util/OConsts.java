@@ -156,7 +156,7 @@ public final class OConsts {
     /** Number of fuzzy matches to store */
     public static final int MAX_STORED_NEAR_STRINGS = 50;
 
-    public static final int MAX_BACKUPS = 11;
+    public static final int MAX_BACKUPS = 2;
 
     /**
      * The limit of bytes that various filters may read ahead to inspect files.

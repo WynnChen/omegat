@@ -38,6 +38,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
@@ -106,6 +107,7 @@ public final class WikiGet {
             joined = joinString("index.php?title=", splitted);
             joined = joined + "&action=raw";
         } else {
+			/*
             // assume script is behind some sort
             // of url-rewriting
             String[] splitted = remoteUrl.split("/");
@@ -116,9 +118,17 @@ public final class WikiGet {
             splitted[splitted.length - 1] = s;
             joined = joinString("/", splitted);
             joined = joined + "?action=raw";
+			*/
+			//这里自己写：
+			remoteUrl = remoteUrl.replaceAll("(?i)#.*$", ""); //干掉后面#之后的部份。
+			String path = remoteUrl.replaceAll("(?i)http[^/]+//[^/]+/", ""); //去掉前面域名部分，留下后面路径
+			name = URLDecoder.decode(path, "UTF-8"); //统一解掉 %27 这类的，维持一致性，最后再恢复就是。
+			name = name.replaceAll(" ", "_"); //空格替换成下划线，作为标准文件名留给保存的时候用
+			joined = remoteUrl + "?action=raw";
         }
         String page = getURL(joined);
-        saveUTF8(projectdir, name + ".UTF8", page);
+        //saveUTF8(projectdir, name + ".UTF8", page);
+		saveUTF8(projectdir, name + ".UTF8", page.trim()); //trim 掉额外的空格。gamepedia的系统抓出来的内容似乎在一开始会有额外的空格。
     }
 
     /**
@@ -160,7 +170,17 @@ public final class WikiGet {
     public static void saveUTF8(String dir, String filename, String output) {
         // Page name can contain invalid characters, see [1878113]
         // Contributed by Anatoly Techtonik
-        filename = filename.replaceAll("[\\\\/:\\*\\?\\\"\\|\\<\\>]", "_");
+		// 处理文件系统不能使用的字符。 这里不能全部直接处理成一样，不然事后很难处理回复。
+        //filename = filename.replaceAll("[\\\\/:\\*\\?\\\"\\|\\<\\>]", "_");
+		filename = filename.replace("\\", "%5C");
+		filename = filename.replace("/", "%2F");
+		filename = filename.replace(":", "%3A");
+		filename = filename.replace("*", "%2A");
+		filename = filename.replace("?", "%3F");
+		filename = filename.replace("\"", "%22");
+		filename = filename.replace("<", "%3C");
+		filename = filename.replace(">", "%3E");
+		filename = filename.replace("|", "%7C");
         File path = new File(dir, filename);
         try (BufferedWriter out = utf8WriterBuilder(new FileOutputStream(path))) {
             out.write(output);
@@ -179,7 +199,13 @@ public final class WikiGet {
     public static String getURL(String target) throws IOException {
         StringBuilder page = new StringBuilder();
         URL url = new URL(target);
-        InputStream in = url.openStream();
+
+        //InputStream in = url.openStream();
+
+        HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+        httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+        InputStream in = httpcon.getInputStream();
+
         byte[] b = new byte[4096];
         for (int n; (n = in.read(b)) != -1;) {
             page.append(new String(b, 0, n, "UTF-8"));

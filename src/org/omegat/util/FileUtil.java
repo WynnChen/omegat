@@ -8,6 +8,7 @@
                2012 Alex Buloichik, Didier Briel
                2014 Alex Buloichik, Aaron Madlon-Kay
                2015-2016 Aaron Madlon-Kay
+               2020 Briac Pilpre
                Home page: http://www.omegat.org/
                Support center: https://omegat.org/support
 
@@ -110,7 +111,7 @@ public final class FileUtil {
 
     /**
      * Create file backup with datetime suffix.
-     * 
+     *
      * @return Backup file
      */
     public static File backupFile(File original) throws IOException {
@@ -174,9 +175,9 @@ public final class FileUtil {
 
     /**
      * Read a file to determine its end-of-line character(s).
-     * 
+     *
      * If neither '\n' nor '\r' are present in the file then it will return null.
-     * 
+     *
      * @param file
      * @param charset
      * @return The EOL character(s) as a string, or null if not detectable
@@ -558,5 +559,48 @@ public final class FileUtil {
             }
         }
         return working;
+    }
+
+    /**
+     * Comparator to sort the tm/ folder alphabetically, but always put tm/enforce
+     * and tm/auto results before other similar % matches.
+     */
+    public static class TmFileComparator implements Comparator<String> {
+        private static final String AUTO_PREFIX = OConsts.AUTO_TM + "/";
+        private static final String ENFORCE_PREFIX = OConsts.AUTO_ENFORCE_TM + "/";
+
+        public TmFileComparator(File tmRoot) {
+            this.tmRoot = tmRoot;
+        }
+
+        private final File tmRoot;
+
+        @Override
+        public int compare(String n1, String n2) {
+            String r1, r2;
+            try {
+                r1 = FileUtil.computeRelativePath(tmRoot, new File(n1));
+                r2 = FileUtil.computeRelativePath(tmRoot, new File(n2));
+            } catch (IOException e) {
+                return n1.compareTo(n2);
+            }
+            int c;
+            if (r1.startsWith(ENFORCE_PREFIX) && r2.startsWith(ENFORCE_PREFIX)) {
+                c = n1.compareTo(n2);
+            } else if (r1.startsWith(ENFORCE_PREFIX)) {
+                c = -1;
+            } else if (r2.startsWith(ENFORCE_PREFIX)) {
+                c = 1;
+            } else if (r1.startsWith(AUTO_PREFIX) && r2.startsWith(AUTO_PREFIX)) {
+                c = n1.compareTo(n2);
+            } else if (r1.startsWith(AUTO_PREFIX)) {
+                c = -1;
+            } else if (r2.startsWith(AUTO_PREFIX)) {
+                c = 1;
+            } else {
+                c = n1.compareTo(n2);
+            }
+            return c;
+        }
     }
 }

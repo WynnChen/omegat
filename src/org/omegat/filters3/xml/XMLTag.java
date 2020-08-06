@@ -5,6 +5,7 @@
 
  Copyright (C) 2000-2006 Keith Godfrey and Maxym Mykhalchuk
                2013 Didier Briel
+               2020 Briac Pilpre
                Home page: http://www.omegat.org/
                Support center: https://omegat.org/support
 
@@ -28,7 +29,6 @@ package org.omegat.filters3.xml;
 
 import org.omegat.filters3.Attribute;
 import org.omegat.filters3.Tag;
-import org.omegat.gui.editor.EditorUtils;
 import org.omegat.util.Language;
 
 /**
@@ -36,15 +36,19 @@ import org.omegat.util.Language;
  *
  * @author Maxym Mykhalchuk
  * @author Didier Briel
+ * @author Briac Pilpre
  */
 public class XMLTag extends Tag {
+    private Language sourceLanguage;
+    private Language targetLanguage;
+
     /** Creates a new instance of XML Tag */
-    public XMLTag(String tag, String shortcut, Type type, org.xml.sax.Attributes attributes, Language targetLanguage) {
+    public XMLTag(String tag, String shortcut, Type type, org.xml.sax.Attributes attributes, Translator translator) {
         super(tag, shortcut, type, XMLUtils.convertAttributes(attributes));
-        this.targetLanguage = targetLanguage;
+        this.sourceLanguage = translator.getSourceLanguage();
+        this.targetLanguage = translator.getTargetLanguage();
     }
 
-    private Language targetLanguage;
     /**
      * Returns the tag in its original form as it was in original document. E.g.
      * for &lt;strong&gt; tag should return &lt;strong&gt;.
@@ -53,11 +57,35 @@ public class XMLTag extends Tag {
     public String toOriginal() {
         StringBuilder buf = new StringBuilder();
 
+        boolean isRtl = Language.isRTL(targetLanguage.getLanguageCode());
+        boolean differentDir = isDifferentDirection(isRtl);
+        boolean isSpecialDocxTagLTR = isSpecialDocxBidiTag(false);
+        boolean isSpecialDocxTagRTL = isSpecialDocxBidiTag(true);
+
+        // Skip special (i/b/sz) tags for target language to keep only those from the source language
+        // (e.g don't include <w:bCs/> from the LTR source in the RTL target.)
+        if (differentDir && ((isRtl && isSpecialDocxTagRTL) || (!isRtl && isSpecialDocxTagLTR))) {
+            return "";
+        }
+
         buf.append("<");
         if (Type.END == getType()) {
             buf.append("/");
         }
-        buf.append(getTag());
+
+        // In Docx, the bold, italic and fontSize are handled differently for complex
+        // script
+        if (differentDir && isRtl && isSpecialDocxTagLTR) {
+            // For LTR -> RTL, convert the i/b/sz to iCs/bCs/szCs if source and target
+            // languages directionality are different.
+            buf.append(getTag() + "Cs");
+        } else if (differentDir && !isRtl && isSpecialDocxTagRTL) {
+            // For RTL -> LTR, convert the iCs/bCs/szCs to i/b/sz
+            buf.append(getTag().replaceFirst("Cs", ""));
+        } else {
+            buf.append(getTag());
+        }
+
         buf.append(getAttributes().toString());
 
         // If that's an Open XML document, we preserve spaces for all <w:t> tags
@@ -71,7 +99,7 @@ public class XMLTag extends Tag {
                 }
             }
             if (!preserve) {
-                 buf.append(" xml:space=\"preserve\"");
+                buf.append(" xml:space=\"preserve\"");
             }
         }
 
@@ -79,7 +107,7 @@ public class XMLTag extends Tag {
 
         // If the target language is RTL and the document is a .doxc
         // we do a number of tag insertions
-        if (EditorUtils.isRTL(targetLanguage.getLanguageCode())) {
+        if (isRtl) {
             if (getTag().equalsIgnoreCase("w:pPr") && Type.BEGIN == getType()) {
                 buf.append("><w:bidi/");
             } else if (getTag().equalsIgnoreCase("w:sectPr") && Type.BEGIN == getType()) {
@@ -100,6 +128,20 @@ public class XMLTag extends Tag {
         buf.append(">");
 
         return buf.toString();
+    }
+
+    private boolean isDifferentDirection(boolean isRtl) {
+        if (sourceLanguage == null) {
+            return false;
+        }
+
+        return isRtl != Language.isRTL(sourceLanguage.getLanguageCode());
+    }
+
+    private boolean isSpecialDocxBidiTag(boolean complex) {
+        String suffix = complex ? "Cs" : "";
+        return Type.ALONE == getType() && (getTag().equalsIgnoreCase("w:i" + suffix)
+                || getTag().equalsIgnoreCase("w:b" + suffix) || getTag().equalsIgnoreCase("w:sz" + suffix));
     }
 
 }

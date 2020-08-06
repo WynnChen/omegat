@@ -1,4 +1,87 @@
 ----------------------------------------------------------------------
+ OmegaT 5.4.0
+----------------------------------------------------------------------
+  0 Enhancements
+  0 Bug fixes
+  0 Localisation updates
+----------------------------------------------------------------------
+5.4.0 vs 5.3.0
+
+
+----------------------------------------------------------------------
+ OmegaT 5.3.0 (2020-08-03)
+----------------------------------------------------------------------
+  6 Enhancements
+  9 Bug fixes
+  10 Localisation updates
+----------------------------------------------------------------------
+5.3.0 vs 5.2.0
+
+  Implemented requests:
+
+  - Display concordance hits from auto/enforce TMX files first
+  https://sourceforge.net/p/omegat/feature-requests/1283/
+
+  - Support reading metadata from plugins and display in UI
+  https://sourceforge.net/p/omegat/feature-requests/1434/
+
+  - Add a "file" type to repository type
+  https://sourceforge.net/p/omegat/feature-requests/1446/
+
+  - Configurable Fuzzy Matches Threshold
+  https://sourceforge.net/p/omegat/feature-requests/1450/
+
+  - Mozilla .ftl files filter
+  https://sourceforge.net/p/omegat/feature-requests/1479/
+
+  - Support Yandex.Cloud machine translation
+  https://sourceforge.net/p/omegat/feature-requests/1494/
+
+  Bug fixes:
+
+  - application_startup event could fail to execute scripts
+  https://sourceforge.net/p/omegat/bugs/860
+
+  - Fix wrong translated word from 'Term' in `Bundle_ko.properties`
+  https://sourceforge.net/p/omegat/bugs/939/
+
+  - Alternative translations are not taken into account if no default
+  translation is set
+  https://sourceforge.net/p/omegat/bugs/969/
+
+  - Wrong directory separator character used in external command
+  placeholders on Windows
+  https://sourceforge.net/p/omegat/bugs/984/
+
+  - RLE and LRE control characters not visible in editor
+  https://sourceforge.net/p/omegat/bugs/988/
+
+  - "Use as default translation" does not work
+  https://sourceforge.net/p/omegat/bugs/987/
+
+  - Deleting repository mappings under Java 11
+  https://sourceforge.net/p/omegat/bugs/990/
+
+  - Missing custom messages in installer fall back to wrong language
+  https://sourceforge.net/p/omegat/bugs/997/
+
+  - Tag validation false positives for some tags from html2 filter
+  https://sourceforge.net/p/omegat/bugs/1001/
+
+  Localisation Updates:
+
+  - Corsican localisation added at 5.3.0 (UI, scripts, readme)
+  - Dutch localisation updated to 5.3.0 (UI, documentation)
+  - Finnish localisation updated 5.3.0 (UI, documentation)
+  - French localisation updated to 5.3.0 (UI, readme)
+  - Italian localisation updated to 5.3.0 (UI, documentation)
+  - Russian localisation updated to 5.3.0 (UI, documentation)
+  - Simplified Chinese localisation updated to 5.3.0 (UI, documentation)
+  - Spanish localisation updated to 5.3.0 (UI, readme)
+  - Turkmen localisation updated to 5.3.0 (UI)
+  - Ukrainian localisation updated to 5.3.0 (UI, readme, documentation)
+
+----------------------------------------------------------------------
  OmegaT 5.2.0 (2020-01-26)
 ----------------------------------------------------------------------
   3 Enhancements
@@ -76,7 +159,7 @@
  OmegaT 5.0.0 (2019-10-01)
 ----------------------------------------------------------------------
   3 Enhancements
-  1 Bug fix
+  2 Bug fixes
   9 Localisation updates
 ----------------------------------------------------------------------
 5.0.0 vs 4.3.2
@@ -93,6 +176,10 @@
   https://sourceforge.net/p/omegat/feature-requests/1455/
 
   Bug fixes:
+
+  - XML DTD declaration is replaced with DTD file content in translated
+  document
+  https://sourceforge.net/p/omegat/bugs/636/
 
   - Regex search-and-replace results are incorrect for some replacements
   https://sourceforge.net/p/omegat/bugs/955/

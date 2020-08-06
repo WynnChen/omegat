@@ -186,6 +186,7 @@ public final class Preferences {
     public static final String ALLOW_MYMEMORY_MACHINE_TRANSLATE = "allow_mymemory_machine_translate";
 
     public static final String ALLOW_YANDEX_TRANSLATE = "allow_yandex_translate";
+    public static final String ALLOW_YANDEX_CLOUD_TRANSLATE = "allow_yandex_cloud_translate";
 
     public static final String ALLOW_MOSES_TRANSLATE = "allow_moses_translate";
 
@@ -358,6 +359,8 @@ public final class Preferences {
     public static final String EXT_TMX_SORT_KEY = "ext_tmx_sort_key";
     /** External TMX options: Whether to show fuzzy matches from foreign (non-target language) matches. */
     public static final String EXT_TMX_KEEP_FOREIGN_MATCH = "keep_foreign_matches";
+    /** External TMX options: Fuzzy Threshold **/
+    public static final String EXT_TMX_FUZZY_MATCH_THRESHOLD = "ext_tmx_fuzzy_match_threshold";
 
     /** View options: Show all sources in bold */
     public static final String VIEW_OPTION_SOURCE_ALL_BOLD = "view_option_source_all_bold";

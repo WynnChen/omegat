@@ -405,7 +405,7 @@ public abstract class AbstractFilter implements IFilter {
      * than using BufferedReader/BufferedWriter.
      * <p>
      * Generally this method should read strings from the input reader and write them to the output reader. In
-     * order to let OmegaT know what strings are translatable and to get thair translation, filter should call
+     * order to let OmegaT know what strings are translatable and to get their translation, filter should call
      * {@link #processEntry(String)} method.
      * <p>
      * If you override this method and do all the processing here, you should simply implement
@@ -423,8 +423,6 @@ public abstract class AbstractFilter implements IFilter {
      *            The target file.
      * @param fc
      *            Filter context.
-     * @returns List of processed files (each element of type {@link File}) or null if the filter can not/did
-     *          not process multiple files.
      *
      * @throws IOException
      *             In case of any I/O error.
@@ -536,7 +534,10 @@ public abstract class AbstractFilter implements IFilter {
     }
 
     /**
-     * Align source file against translated file.
+     * Align source file against translated file. If this function is not overridden, then alignment in console mode
+     * will not be available for this filter.
+     *
+     * Implementations should call entryAlignCallback.addTranslation
      *
      * @param sourceFile
      *            source file
@@ -547,9 +548,12 @@ public abstract class AbstractFilter implements IFilter {
     }
 
     /**
-     * Method can be overrided for return true. It means what two-pass parsing and translating will be
-     * processed and prev/next segments will be linked.
-     */
+     * Method can be overridden to return true, in case you want previous and next segment to be included in the search
+     * for a translation, when alternative translations are provided by the user. (normally, only the filename is used)
+     *
+     * Technically it means that parsing happens in two passes and prev/next segments will be linked, so it comes with
+     * a cost
+     **/
     protected boolean requirePrevNextFields() {
         return false;
     }
@@ -596,6 +600,9 @@ public abstract class AbstractFilter implements IFilter {
      * <li>Instruct OmegaT what source strings are translatable.
      * <li>Get the translation of each source string.
      * </ul>
+     * NB: this method doesn't use ID's or path or protectedParts. If your file format has ID's, paths or
+     * protectedParts, then call {@link #entryParseCallback}.addEntry or
+     * {@link #entryTranslateCallback}.getTranslation instead.
      *
      * @param entry
      *            Translatable source string

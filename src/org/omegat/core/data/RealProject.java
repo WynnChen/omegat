@@ -13,6 +13,7 @@
                2015 Aaron Madlon-Kay
                2017-2018 Didier Briel
                2019 Thomas Cordonnier
+               2020 Briac Pilpre
                Home page: http://www.omegat.org/
                Support center: https://omegat.org/support
 
@@ -1227,6 +1228,14 @@ public class RealProject implements IProject {
                 prepare.source = ste.getSrcText();
                 // project with default translations
                 if (config.isSupportDefaultTranslations()) {
+                    // bug#969 - Alternative translations were not taken into account
+                    // if no default translation is set.
+                    TMXEntry en = projectTMX.getMultipleTranslation(ste.getKey());
+                    if (en != null) {
+                        prepare.translation = ste.getSourceTranslation();
+                        projectTMX.setTranslation(ste, en, false);
+                        continue;
+                    }
                     // can we import as default translation ?
                     TMXEntry enDefault = projectTMX.getDefaultTranslation(ste.getSrcText());
                     if (enDefault == null) {
@@ -1275,7 +1284,8 @@ public class RealProject implements IProject {
                 return;
             }
             // create new translation memories map
-            Map<String, ExternalTMX> newTransMemories = new TreeMap<>(transMemories);
+            Map<String, ExternalTMX> newTransMemories = new TreeMap<>(new FileUtil.TmFileComparator(config.getTmDir().getAsFile()));
+            newTransMemories.putAll(transMemories);
             if (file.exists()) {
                 try {
                     ExternalTMX newTMX = ExternalTMFactory.load(file);

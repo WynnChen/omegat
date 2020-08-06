@@ -32,7 +32,9 @@ package org.omegat.gui.exttrans;
 import java.awt.Dimension;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -45,6 +47,7 @@ import org.omegat.core.machinetranslators.MachineTranslators;
 import org.omegat.filters2.master.PluginUtils;
 import org.omegat.gui.common.EntryInfoSearchThread;
 import org.omegat.gui.common.EntryInfoThreadPane;
+import org.omegat.gui.glossary.GlossaryEntry;
 import org.omegat.gui.main.DockableScrollPane;
 import org.omegat.gui.main.IMainWindow;
 import org.omegat.gui.preferences.PreferencesWindowController;
@@ -88,11 +91,18 @@ public class MachineTranslateTextArea extends EntryInfoThreadPane<MachineTransla
 
         for (Class<?> mtc : PluginUtils.getMachineTranslationClasses()) {
             try {
-                MachineTranslators.add((IMachineTranslation) mtc.getDeclaredConstructor().newInstance());
+                IMachineTranslation mt = (IMachineTranslation) mtc.getDeclaredConstructor().newInstance();
+                mt.setGlossarySupplier(this::getGlossaryMap);
+                MachineTranslators.add(mt);
             } catch (Exception ex) {
                 Log.log(ex);
             }
         }
+    }
+
+    Map<String, String> getGlossaryMap() {
+        return Core.getGlossaryManager().searchSourceMatches(currentlyProcessedEntry).stream()
+                .collect(Collectors.toMap(GlossaryEntry::getSrcText, GlossaryEntry::getLocText));
     }
 
     /** Cycle getDisplayedTranslation **/
@@ -156,8 +166,7 @@ public class MachineTranslateTextArea extends EntryInfoThreadPane<MachineTransla
         private final String src;
         private final boolean force;
 
-        public FindThread(final IMachineTranslation translator, final SourceTextEntry newEntry,
-                boolean force) {
+        public FindThread(final IMachineTranslation translator, final SourceTextEntry newEntry, boolean force) {
             super(MachineTranslateTextArea.this, newEntry);
             this.translator = translator;
             src = newEntry.getSrcText();

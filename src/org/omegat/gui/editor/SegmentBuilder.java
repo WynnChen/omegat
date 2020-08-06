@@ -167,14 +167,18 @@ public class SegmentBuilder {
      * @return OmElementSegment
      */
     public void createSegmentElement(final boolean isActive, TMXEntry trans) {
-        createSegmentElement(isActive, doc.getLength(), trans);
+        createSegmentElement(isActive, doc.getLength(), trans, trans.defaultTranslation);
+    }
+
+    public void createSegmentElement(final boolean isActive, TMXEntry trans, final boolean defaultTranslation) {
+        createSegmentElement(isActive, doc.getLength(), trans, defaultTranslation);
     }
 
     public void prependSegmentElement(final boolean isActive, TMXEntry trans) {
-        createSegmentElement(isActive, 0, trans);
+        createSegmentElement(isActive, 0, trans, trans.defaultTranslation);
     }
 
-    public void createSegmentElement(final boolean isActive, int initialOffset, TMXEntry trans) {
+    public void createSegmentElement(final boolean isActive, int initialOffset, TMXEntry trans, final boolean defaultTranslation) {
         UIThreadsUtil.mustBeSwingThread();
 
         displayVersion = globalVersions.incrementAndGet();
@@ -195,9 +199,9 @@ public class SegmentBuilder {
                     offset = initialOffset;
                 }
 
-                defaultTranslation = trans.defaultTranslation;
+                this.defaultTranslation = defaultTranslation;
                 if (!Core.getProject().getProjectProperties().isSupportDefaultTranslations()) {
-                    defaultTranslation = false;
+                    this.defaultTranslation = false;
                 }
                 transExist = trans.isTranslated();
                 noteExist = trans.hasNote();
@@ -492,7 +496,7 @@ public class SegmentBuilder {
     private void addOtherLanguagePart(String text, Language language)
             throws BadLocationException {
         int prevOffset = offset;
-        boolean rtl = EditorUtils.isRTL(language.getLanguageCode());
+        boolean rtl = Language.isRTL(language.getLanguageCode());
         insertDirectionEmbedding(false);
         AttributeSet normal = attrs(true, false, false, false);
         insert(language.getLanguage() + ": ", normal);
@@ -540,7 +544,7 @@ public class SegmentBuilder {
         }
 
         int prevOffset = offset;
-        boolean rtl = EditorUtils.localeIsRTL();
+        boolean rtl = Language.localeIsRTL();
         insertDirectionEmbedding(rtl);
         AttributeSet attrs = settings.getModificationInfoAttributeSet();
         insert(text, attrs);
@@ -575,7 +579,7 @@ public class SegmentBuilder {
         insertDirectionMarker(rtl);
 
         //the marker itself is in user language
-        insertDirectionEmbedding(EditorUtils.localeIsRTL());
+        insertDirectionEmbedding(Language.localeIsRTL());
         AttributeSet attrSegmentMark = settings.getSegmentMarkerAttributeSet();
         insert(createSegmentMarkText(), attrSegmentMark);
         insertDirectionEndEmbedding();

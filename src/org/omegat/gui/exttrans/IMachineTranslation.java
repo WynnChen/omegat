@@ -27,6 +27,7 @@
 package org.omegat.gui.exttrans;
 
 import java.awt.Window;
+import java.util.logging.Logger;
 
 import org.omegat.util.Language;
 
@@ -53,6 +54,18 @@ public interface IMachineTranslation {
     default void setEnabled(boolean enabled) {
         // Nothing
     }
+
+	/**
+	 * Set a glossary supplier to provide relevant glossary terms if desired. The
+	 * terms are provided as a map with keys being the source terms and values being
+	 * the target terms.
+	 *
+	 * @param glossarySupplier
+	 */
+	default void setGlossarySupplier(IMTGlossarySupplier glossarySupplier) {
+		Logger.getLogger(IMachineTranslation.class.getName())
+				.warning("IMachineTranslation.setGlossaryProvider default (empty) implementation called");
+	}
 
     /**
      * Translate.

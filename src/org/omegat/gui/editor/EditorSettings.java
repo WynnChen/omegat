@@ -79,31 +79,31 @@ public class EditorSettings implements IEditorSettings {
         this.parent = parent;
 
         //options from menu 'view'
-        useTabForAdvance = Preferences.isPreference(Preferences.USE_TAB_TO_ADVANCE);
-        markTranslated = Preferences.isPreference(Preferences.MARK_TRANSLATED_SEGMENTS);
-        markUntranslated = Preferences.isPreference(Preferences.MARK_UNTRANSLATED_SEGMENTS);
-        displaySegmentSources = Preferences.isPreference(Preferences.DISPLAY_SEGMENT_SOURCES);
-        markNonUniqueSegments = Preferences.isPreference(Preferences.MARK_NON_UNIQUE_SEGMENTS);
-        markNoted = Preferences.isPreference(Preferences.MARK_NOTED_SEGMENTS);
-        markNBSP  = Preferences.isPreference(Preferences.MARK_NBSP);
-        markParagraphDelimitations = Preferences.isPreference(Preferences.MARK_PARA_DELIMITATIONS);
-        markWhitespace  = Preferences.isPreference(Preferences.MARK_WHITESPACE);
-        markBidi  = Preferences.isPreference(Preferences.MARK_BIDI);
+        useTabForAdvance = Preferences.isPreferenceDefault(Preferences.USE_TAB_TO_ADVANCE, Preferences.USE_TAB_TO_ADVANCE_DEFAULT);
+        markTranslated = Preferences.isPreferenceDefault(Preferences.MARK_TRANSLATED_SEGMENTS, Preferences.MARK_TRANSLATED_SEGMENTS_DEFAULT);
+        markUntranslated = Preferences.isPreferenceDefault(Preferences.MARK_UNTRANSLATED_SEGMENTS, Preferences.MARK_UNTRANSLATED_SEGMENTS_DEFAULT);
+        displaySegmentSources = Preferences.isPreferenceDefault(Preferences.DISPLAY_SEGMENT_SOURCES, Preferences.DISPLAY_SEGMENT_SOURCES_DEFAULT);
+        markNonUniqueSegments = Preferences.isPreferenceDefault(Preferences.MARK_NON_UNIQUE_SEGMENTS, Preferences.MARK_NON_UNIQUE_SEGMENTS_DEFAULT);
+        markNoted = Preferences.isPreferenceDefault(Preferences.MARK_NOTED_SEGMENTS, Preferences.MARK_NOTED_SEGMENTS_DEFAULT);
+        markNBSP  = Preferences.isPreferenceDefault(Preferences.MARK_NBSP, Preferences.MARK_NBSP_DEFAULT);
+        markParagraphDelimitations = Preferences.isPreferenceDefault(Preferences.MARK_PARA_DELIMITATIONS, Preferences.MARK_PARA_DELIMITATIONS_DEFAULT);
+        markWhitespace  = Preferences.isPreferenceDefault(Preferences.MARK_WHITESPACE, Preferences.MARK_WHITESPACE_DEFAULT);
+        markBidi  = Preferences.isPreferenceDefault(Preferences.MARK_BIDI, Preferences.MARK_BIDI_DEFAULT);
         displayModificationInfo = Preferences.getPreferenceDefault(Preferences.DISPLAY_MODIFICATION_INFO,
-                DISPLAY_MODIFICATION_INFO_NONE);
-        autoSpellChecking = Preferences.isPreference(Preferences.ALLOW_AUTO_SPELLCHECKING);
-        markAutoPopulated = Preferences.isPreference(Preferences.MARK_AUTOPOPULATED);
+                DISPLAY_MODIFICATION_INFO_SELECTED);
+        autoSpellChecking = Preferences.isPreferenceDefault(Preferences.ALLOW_AUTO_SPELLCHECKING, Preferences.ALLOW_AUTO_SPELLCHECKING_DEFAULT);
+        markAutoPopulated = Preferences.isPreferenceDefault(Preferences.MARK_AUTOPOPULATED, Preferences.MARK_AUTOPOPULATED_DEFAULT);
 
         // options from preferences 'view' pane
         viewSourceBold = Preferences.isPreferenceDefault(Preferences.VIEW_OPTION_SOURCE_ALL_BOLD,
                 Preferences.VIEW_OPTION_SOURCE_ALL_BOLD_DEFAULT);
         viewActiveSourceBold = Preferences.isPreferenceDefault(Preferences.VIEW_OPTION_SOURCE_ACTIVE_BOLD,
                 Preferences.VIEW_OPTION_SOURCE_ACTIVE_BOLD_DEFAULT);
-        markFirstNonUnique = Preferences.isPreference(Preferences.VIEW_OPTION_UNIQUE_FIRST);
-        markGlossaryMatches = Preferences.isPreference(Preferences.MARK_GLOSSARY_MATCHES);
+        markFirstNonUnique = Preferences.isPreferenceDefault(Preferences.VIEW_OPTION_UNIQUE_FIRST, Preferences.VIEW_OPTION_UNIQUE_FIRST_DEFAULT);
+        markGlossaryMatches = Preferences.isPreferenceDefault(Preferences.MARK_GLOSSARY_MATCHES, Preferences.MARK_GLOSSARY_MATCHES_DEFAULT);
         markLanguageChecker = !Preferences.isPreferenceDefault(Preferences.LT_DISABLED,
                 Preferences.LT_DISABLED_DEFAULT);
-        doFontFallback = Preferences.isPreference(Preferences.FONT_FALLBACK);
+        doFontFallback = Preferences.isPreferenceDefault(Preferences.FONT_FALLBACK, Preferences.FONT_FALLBACK_DEFAULT);
     }
 
     public char getAdvancerChar() {

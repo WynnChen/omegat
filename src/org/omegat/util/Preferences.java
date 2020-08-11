@@ -87,7 +87,7 @@ public final class Preferences {
     public static final String TF_SRC_FONT_NAME = "source_font";
     public static final String TF_FONT_DEFAULT = "Dialog";
     public static final String TF_SRC_FONT_SIZE = "source_font_size";
-    public static final int TF_FONT_SIZE_DEFAULT = 12;
+    public static final int TF_FONT_SIZE_DEFAULT = 14; //默认值调大到14，官方是12
 
     /** Whether to automatically perform MT requests on entering segment */
     public static final String MT_AUTO_FETCH = "mt_auto_fetch";
@@ -166,6 +166,7 @@ public final class Preferences {
 
     /** Use the TAB button to advance to the next segment */
     public static final String USE_TAB_TO_ADVANCE = "tab_advance";
+    public static final boolean USE_TAB_TO_ADVANCE_DEFAULT = true; //默认给他打开
     /** Always confirm Quit, even if the project is saved */
     public static final String ALWAYS_CONFIRM_QUIT = "always_confirm_quit";
 
@@ -195,37 +196,51 @@ public final class Preferences {
      * backwards-compatibility.
      */
     public static final String MARK_GLOSSARY_MATCHES = "transtips";
+	public static final boolean MARK_GLOSSARY_MATCHES_DEFAULT = false;//默认值
+
 
     /** Mark the segments with a note with a different color */
     public static final String MARK_NOTED_SEGMENTS = "mark_noted_segments";
+	public static final boolean MARK_NOTED_SEGMENTS_DEFAULT = false; //默认值
 
     /** Mark the non-breakable spaces with a different color */
     public static final String MARK_NBSP = "mark_nbsp";
+	public static final boolean MARK_NBSP_DEFAULT = false; //默认值
     /** Mark whitespace as symbols */
     public static final String MARK_WHITESPACE = "mark_whitespace";
+	public static final boolean MARK_WHITESPACE_DEFAULT = true; //默认值
     /** Mark Bidi controls as symbols */
     public static final String MARK_BIDI = "mark_bidi";
+	public static final boolean MARK_BIDI_DEFAULT = false; //默认值
     /** Do aggressive font fallback */
     public static final String FONT_FALLBACK = "font_fallback";
+	public static final boolean FONT_FALLBACK_DEFAULT = false;//默认值
+    
     
     /** Mark paragraphs starts */
     public static final String MARK_PARA_DELIMITATIONS = "mark_para_delimitation";
+	public static final boolean MARK_PARA_DELIMITATIONS_DEFAULT = false;//默认值
     public static final String MARK_PARA_TEXT = "mark_para_delimitation_text";
     /** Default paragraph delimitation indicator */
     public static final String MARK_PARA_TEXT_DEFAULT = "\u2014 \u00b6 \u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014";
 
     /** Mark the translated segments with a different color */
     public static final String MARK_TRANSLATED_SEGMENTS = "mark_translated_segments";
+	public static final boolean MARK_TRANSLATED_SEGMENTS_DEFAULT = true;//默认改
+
 
     public static final String MARK_AUTOPOPULATED = "mark_autopopulated";
+	public static final boolean MARK_AUTOPOPULATED_DEFAULT = false; //默认值
 
     /** Mark the untranslated segments with a different color */
     public static final String MARK_UNTRANSLATED_SEGMENTS = "mark_untranslated_segments";
+	public static final boolean MARK_UNTRANSLATED_SEGMENTS_DEFAULT = true; //修改默认值
 
     /** Workflow Option: Don't Insert Source Text Into Translated Segment */
     public static final String DONT_INSERT_SOURCE_TEXT = "wf_noSourceText";
     /** Workflow Option: Allow translation to be equal to source */
     public static final String ALLOW_TRANS_EQUAL_TO_SRC = "wf_allowTransEqualToSrc";
+	public static final boolean ALLOW_TRANS_EQUAL_TO_SRC_DEFAULT = true; //默认打开
     /** Workflow Option: Insert Best Match Into Translated Segment */
     public static final String BEST_MATCH_INSERT = "wf_insertBestMatch";
     /** Workflow Option: Minimal Similarity Of the Best Fuzzy Match to insert */
@@ -252,6 +267,7 @@ public final class Preferences {
     public static final String STOP_ON_ALTERNATIVE_TRANSLATION = "wf_stopOnAlternativeTranslation";
     /** Workflow Option: Attempt to convert numbers when inserting a fuzzy match */
     public static final String CONVERT_NUMBERS = "wf_convertNumbers";
+    public static final boolean CONVERT_NUMBERS_DEFAULT = true; //修改默认值
     /** Workflow Option: Save auto-populated status */
     public static final String SAVE_AUTO_STATUS = "save_auto_status";
     /** Workflow Option: Number of segments to load initially in editor */
@@ -285,6 +301,7 @@ public final class Preferences {
      * allow automatic spell checking or not
      */
     public static final String ALLOW_AUTO_SPELLCHECKING = "allow_auto_spellchecking";
+	public static final boolean ALLOW_AUTO_SPELLCHECKING_DEFAULT = false;
 
     /**
      * The location of the spell checker dictionaries
@@ -338,11 +355,13 @@ public final class Preferences {
      * display the segment sources
      */
     public static final String DISPLAY_SEGMENT_SOURCES = "display_segment_sources";
+	public static final boolean DISPLAY_SEGMENT_SOURCES_DEFAULT = true; //修改默认值
 
     /**
      * mark unique segments
      */
     public static final String MARK_NON_UNIQUE_SEGMENTS = "mark_non_unique_segments";
+	public static final boolean MARK_NON_UNIQUE_SEGMENTS_DEFAULT = false;
 
     /**
      * display modification info (author and modification date)
@@ -355,6 +374,10 @@ public final class Preferences {
     public static final String EXT_TMX_USE_SLASH = "ext_tmx_use_slash";
     /** External TMX options: Display template **/
     public static final String EXT_TMX_MATCH_TEMPLATE = "ext_tmx_match_template";
+	public static final String EXT_TMX_MATCH_TEMPLATE_DEFAULT = "${id}. ${fuzzyFlag}${sourceText}\n" +
+		"${targetText}\n" + 
+		"&lt;${score}/${noStemScore}/${adjustedScore}% ${fileShortPath}&gt; \n" + 
+		"${diff}\n"; //修改默认值
     /** External TMX options: Fuzzy match sort key **/
     public static final String EXT_TMX_SORT_KEY = "ext_tmx_sort_key";
     /** External TMX options: Whether to show fuzzy matches from foreign (non-target language) matches. */
@@ -370,6 +393,7 @@ public final class Preferences {
     public static final boolean VIEW_OPTION_SOURCE_ACTIVE_BOLD_DEFAULT = true;
     /** View options: Mark first non-unique */
     public static final String VIEW_OPTION_UNIQUE_FIRST = "view_option_unique_first";
+	public static final boolean VIEW_OPTION_UNIQUE_FIRST_DEFAULT = false;
     /** View options: Simplify protected parts tooltips */
     public static final String VIEW_OPTION_PPT_SIMPLIFY = "view_option_ppt_simplify";
     public static final boolean VIEW_OPTION_PPT_SIMPLIFY_DEFAULT = true;

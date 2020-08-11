@@ -59,7 +59,8 @@ public final class Styles {
         COLOR_BACKGROUND(UIManager.getColor("TextPane.background")), // Also used for EditorPane.background
         COLOR_FOREGROUND(UIManager.getColor("TextPane.foreground")),
 
-        COLOR_ACTIVE_SOURCE("#c0ffc0"),
+        //COLOR_ACTIVE_SOURCE("#c0ffc0"),
+		COLOR_ACTIVE_SOURCE("#ffccff"),
         COLOR_ACTIVE_SOURCE_FG((Color) null),
         COLOR_ACTIVE_TARGET((Color) null),
         COLOR_ACTIVE_TARGET_FG((Color) null),
@@ -93,12 +94,17 @@ public final class Styles {
         COLOR_TRANSTIPS("#0000ff"),
         COLOR_SPELLCHECK("#ff0000"),
         COLOR_TERMINOLOGY(Color.ORANGE),
-        COLOR_MATCHES_CHANGED("#0000ff"),
+//        COLOR_MATCHES_CHANGED("#0000ff"),
+		COLOR_MATCHES_CHANGED("#00ccff"),
         COLOR_MATCHES_UNCHANGED("#00ff00"),
-        COLOR_MATCHES_DEL_ACTIVE((Color) null),
-        COLOR_MATCHES_DEL_INACTIVE((Color) null),
-        COLOR_MATCHES_INS_ACTIVE("#0000ff"),
-        COLOR_MATCHES_INS_INACTIVE("#808080"), // Color.gray
+//        COLOR_MATCHES_DEL_ACTIVE((Color) null),
+//        COLOR_MATCHES_DEL_INACTIVE((Color) null),
+//        COLOR_MATCHES_INS_ACTIVE("#0000ff"),
+//        COLOR_MATCHES_INS_INACTIVE("#808080"), // Color.gray
+        COLOR_MATCHES_DEL_ACTIVE("#ff0000"),
+        COLOR_MATCHES_DEL_INACTIVE("#ff6600"),
+        COLOR_MATCHES_INS_ACTIVE("#00cc33"),
+        COLOR_MATCHES_INS_INACTIVE("#009900"), 
         COLOR_HYPERLINK("#0000ff"), // Blue
         COLOR_SEARCH_FOUND_MARK(Color.BLUE),
         COLOR_SEARCH_REPLACE_MARK("#ff9900"), // Dark orange

@@ -87,7 +87,7 @@ public final class Preferences {
     public static final String TF_SRC_FONT_NAME = "source_font";
     public static final String TF_FONT_DEFAULT = "微软雅黑"; //修改默认值
     public static final String TF_SRC_FONT_SIZE = "source_font_size";
-    public static final int TF_FONT_SIZE_DEFAULT = 14; //默认值调大到14，官方是12
+    public static final int TF_FONT_SIZE_DEFAULT = 16; //默认值调大到16，官方是12
 
     /** Whether to automatically perform MT requests on entering segment */
     public static final String MT_AUTO_FETCH = "mt_auto_fetch";
@@ -214,7 +214,7 @@ public final class Preferences {
 	public static final boolean MARK_BIDI_DEFAULT = false; //默认值
     /** Do aggressive font fallback */
     public static final String FONT_FALLBACK = "font_fallback";
-	public static final boolean FONT_FALLBACK_DEFAULT = false;//默认值
+	public static final boolean FONT_FALLBACK_DEFAULT = true;//默认值
     
     
     /** Mark paragraphs starts */

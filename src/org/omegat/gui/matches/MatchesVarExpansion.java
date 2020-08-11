@@ -111,7 +111,8 @@ public class MatchesVarExpansion extends VarExpansion<NearString> {
             + "<" + VAR_SCORE_BASE + "/"
             + VAR_SCORE_NOSTEM + "/"
             + VAR_SCORE_ADJUSTED + "% "
-            + VAR_FILE_PATH + ">";
+            + VAR_FILE_PATH + ">\n"
+            + VAR_DIFF;
 
     public static final Pattern PATTERN_SINGLE_PROPERTY = Pattern.compile("@\\{(.+?)\\}");
     public static final Pattern PATTERN_PROPERTY_GROUP = Pattern.compile("@\\[(.+?)\\]\\[(.+?)\\]\\[(.+?)\\]");

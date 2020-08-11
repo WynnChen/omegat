@@ -375,10 +375,6 @@ public final class Preferences {
     public static final String EXT_TMX_USE_SLASH = "ext_tmx_use_slash";
     /** External TMX options: Display template **/
     public static final String EXT_TMX_MATCH_TEMPLATE = "ext_tmx_match_template";
-	public static final String EXT_TMX_MATCH_TEMPLATE_DEFAULT = "${id}. ${fuzzyFlag}${sourceText}\n" +
-		"${targetText}\n" + 
-		"&lt;${score}/${noStemScore}/${adjustedScore}% ${fileShortPath}&gt; \n" + 
-		"${diff}\n"; //修改默认值
     /** External TMX options: Fuzzy match sort key **/
     public static final String EXT_TMX_SORT_KEY = "ext_tmx_sort_key";
     /** External TMX options: Whether to show fuzzy matches from foreign (non-target language) matches. */

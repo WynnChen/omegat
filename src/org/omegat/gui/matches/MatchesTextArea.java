@@ -396,7 +396,7 @@ public class MatchesTextArea extends EntryInfoThreadPane<List<NearString>> imple
                     }
 
                     String translation = thebest.translation;
-                    if (Preferences.isPreference(Preferences.CONVERT_NUMBERS)) {
+                    if (Preferences.isPreferenceDefault(Preferences.CONVERT_NUMBERS, Preferences.CONVERT_NUMBERS_DEFAULT)) {
                         translation =
                             substituteNumbers(currentEntry.getSrcText(), thebest.source, thebest.translation);
                     }

@@ -235,7 +235,7 @@ public class MainWindow extends JFrame implements IMainWindow {
             NearString near = Core.getMatcher().getActiveMatch();
             if (near != null) {
                 text = near.translation;
-                if (Preferences.isPreference(Preferences.CONVERT_NUMBERS)) {
+                if (Preferences.isPreferenceDefault(Preferences.CONVERT_NUMBERS, Preferences.CONVERT_NUMBERS_DEFAULT)) {
                     text = Core.getMatcher().substituteNumbers(Core.getEditor().getCurrentEntry().getSrcText(),
                         near.source, near.translation);
                 }
@@ -273,7 +273,7 @@ public class MainWindow extends JFrame implements IMainWindow {
         NearString near = Core.getMatcher().getActiveMatch();
         if (near != null) {
             String translation = near.translation;
-            if (Preferences.isPreference(Preferences.CONVERT_NUMBERS)) {
+            if (Preferences.isPreferenceDefault(Preferences.CONVERT_NUMBERS, Preferences.CONVERT_NUMBERS_DEFAULT)) {
                 translation = Core.getMatcher().substituteNumbers(Core.getEditor().getCurrentEntry().getSrcText(),
                         near.source, near.translation);
             }

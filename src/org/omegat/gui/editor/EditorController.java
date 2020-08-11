@@ -1167,7 +1167,7 @@ public class EditorController implements IEditor {
                     newen.translation = null; // will be untranslated
                 }
             } else if (newTrans.equals(newen.source)) { // equals to source
-                if (Preferences.isPreference(Preferences.ALLOW_TRANS_EQUAL_TO_SRC)) {
+                if (Preferences.isPreferenceDefault(Preferences.ALLOW_TRANS_EQUAL_TO_SRC, Preferences.ALLOW_TRANS_EQUAL_TO_SRC_DEFAULT)) {
                     // translation can be equals to source
                     newen.translation = newTrans;
                 } else {
@@ -1407,7 +1407,7 @@ public class EditorController implements IEditor {
             if (!findTranslated && !isTranslated) {
                 return true; // non-translated
             }
-            if (Preferences.isPreference(Preferences.STOP_ON_ALTERNATIVE_TRANSLATION)) {
+            if (Preferences.isPreferenceDefault(Preferences.STOP_ON_ALTERNATIVE_TRANSLATION, Preferences.STOP_ON_ALTERNATIVE_TRANSLATION_DEFAULT)) {
                 // when there is at least one alternative translation, then
                 // we can consider that segment is not translated
                 HasMultipleTranslations checker = new HasMultipleTranslations(ste.getSrcText());

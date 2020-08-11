@@ -206,7 +206,7 @@ public class RealProject implements IProject {
         EMPTY_TRANSLATION = new TMXEntry(empty, true, null);
     }
 
-    private boolean allowTranslationEqualToSource = Preferences.isPreference(Preferences.ALLOW_TRANS_EQUAL_TO_SRC);
+    private boolean allowTranslationEqualToSource = Preferences.isPreferenceDefault(Preferences.ALLOW_TRANS_EQUAL_TO_SRC, Preferences.ALLOW_TRANS_EQUAL_TO_SRC_DEFAULT);
 
     /**
      * A list of external processes. Allows previously-started, hung or long-running processes to be

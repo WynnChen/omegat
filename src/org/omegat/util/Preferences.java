@@ -85,7 +85,7 @@ public final class Preferences {
     public static final String GLOSSARY_FILE = "glossary_file";
 
     public static final String TF_SRC_FONT_NAME = "source_font";
-    public static final String TF_FONT_DEFAULT = "Dialog";
+    public static final String TF_FONT_DEFAULT = "微软雅黑"; //修改默认值
     public static final String TF_SRC_FONT_SIZE = "source_font_size";
     public static final int TF_FONT_SIZE_DEFAULT = 14; //默认值调大到14，官方是12
 
@@ -265,6 +265,7 @@ public final class Preferences {
     /** Workflow Option: Go To Next Untranslated Segment stops when there is at least one
     alternative translation */
     public static final String STOP_ON_ALTERNATIVE_TRANSLATION = "wf_stopOnAlternativeTranslation";
+	public static final boolean STOP_ON_ALTERNATIVE_TRANSLATION_DEFAULT = true; //默认打开
     /** Workflow Option: Attempt to convert numbers when inserting a fuzzy match */
     public static final String CONVERT_NUMBERS = "wf_convertNumbers";
     public static final boolean CONVERT_NUMBERS_DEFAULT = true; //修改默认值
@@ -387,7 +388,7 @@ public final class Preferences {
 
     /** View options: Show all sources in bold */
     public static final String VIEW_OPTION_SOURCE_ALL_BOLD = "view_option_source_all_bold";
-    public static final boolean VIEW_OPTION_SOURCE_ALL_BOLD_DEFAULT = true;
+    public static final boolean VIEW_OPTION_SOURCE_ALL_BOLD_DEFAULT = false;
     /** View options: Show active source in bold */
     public static final String VIEW_OPTION_SOURCE_ACTIVE_BOLD = "view_option_source_active_bold";
     public static final boolean VIEW_OPTION_SOURCE_ACTIVE_BOLD_DEFAULT = true;

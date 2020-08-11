@@ -198,7 +198,7 @@ public final class MainWindowUI {
         Border border = UIManager.getBorder("OmegaTStatusArea.border");
 
         final StatusBarMode progressMode = Preferences.getPreferenceEnumDefault(
-                Preferences.SB_PROGRESS_MODE, StatusBarMode.DEFAULT);
+                Preferences.SB_PROGRESS_MODE, StatusBarMode.PERCENTAGE);
 
         String statusText = OStrings.getString("MW_PROGRESS_DEFAULT");
         String tooltipText = "MW_PROGRESS_TOOLTIP";

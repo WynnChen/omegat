@@ -196,7 +196,7 @@ public final class Preferences {
      * backwards-compatibility.
      */
     public static final String MARK_GLOSSARY_MATCHES = "transtips";
-	public static final boolean MARK_GLOSSARY_MATCHES_DEFAULT = false;//默认值
+	public static final boolean MARK_GLOSSARY_MATCHES_DEFAULT = true;//默认值
 
 
     /** Mark the segments with a note with a different color */

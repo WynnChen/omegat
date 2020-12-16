@@ -301,6 +301,8 @@ public final class ProjectUICommands {
         }
         new SwingWorker<Void, Void>() {
             File projectRoot;
+            IMainWindow mainWindow;
+            Cursor oldCursor;
             protected Void doInBackground() throws Exception {
                 Core.getMainWindow().showStatusMessageRB(null);
 
@@ -317,15 +319,15 @@ public final class ProjectUICommands {
                     return null;
                 }
 
-                IMainWindow mainWindow = Core.getMainWindow();
+                mainWindow = Core.getMainWindow();
                 Cursor hourglassCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
-                Cursor oldCursor = mainWindow.getCursor();
+                oldCursor = mainWindow.getCursor();
                 mainWindow.setCursor(hourglassCursor);
                 Core.getMainWindow().showStatusMessageRB("CT_DOWNLOADING_PROJECT");
 
                 // retrieve omegat.project
                 projectRoot = dir;
-                List<RepositoryDefinition> repos = new ArrayList<RepositoryDefinition>();
+                List<RepositoryDefinition> repos = new ArrayList<>();
                 RepositoryDefinition repo = new RepositoryDefinition();
                 repos.add(repo);
                 repo.setType(dialog.getRepoType());
@@ -337,15 +339,15 @@ public final class ProjectUICommands {
 
                 RemoteRepositoryProvider remoteRepositoryProvider = new RemoteRepositoryProvider(projectRoot,
                         repos);
-                remoteRepositoryProvider.switchAllToLatest();
+                remoteRepositoryProvider.switchAllToLatestAndPropagateDeletes();
                 for (String file : new String[] { OConsts.FILE_PROJECT,
                         OConsts.DEFAULT_INTERNAL + '/' + FilterMaster.FILE_FILTERS,
                         OConsts.DEFAULT_INTERNAL + '/' + SRX.CONF_SENTSEG }) {
-                    remoteRepositoryProvider.copyFilesFromRepoToProject(file);
+                    remoteRepositoryProvider.copyFilesFromReposToProject(file);
                 }
 
                 ProjectProperties props = ProjectFileStorage.loadProjectProperties(projectRoot);
-                if (props.getRepositories() == null) { // We assume it's a 3.6 style project with no repository mapping,
+                if (props.getRepositories() == null) { // We assume it's a project with no repository mapping,
                     props.setRepositories(repos);      // so we add root repository mapping
                 }
                 // We write in all cases, because we might have added default excludes, for instance
@@ -367,6 +369,7 @@ public final class ProjectUICommands {
 //                projectOpen(localDirectory);
 
                 mainWindow.setCursor(oldCursor);
+                oldCursor=null;
                 return null;
             }
             @Override
@@ -385,6 +388,7 @@ public final class ProjectUICommands {
                 } catch (Exception ex) {
                     Log.logErrorRB(ex, "PP_ERROR_UNABLE_TO_DOWNLOAD_TEAM_PROJECT");
                     Core.getMainWindow().displayErrorRB(ex, "PP_ERROR_UNABLE_TO_DOWNLOAD_TEAM_PROJECT");
+                    if (oldCursor != null) mainWindow.setCursor(oldCursor);
                 }
             }
         }.execute();
@@ -481,15 +485,23 @@ public final class ProjectUICommands {
                             mainWindow.showStatusMessageRB("TEAM_OPEN");
                             try {
                                 RemoteRepositoryProvider remoteRepositoryProvider = 
-                                        new RemoteRepositoryProvider(props.getProjectRootDir(),
-                                        props.getRepositories());
-                                remoteRepositoryProvider.switchToVersion(OConsts.FILE_PROJECT, null);
+                                        new RemoteRepositoryProvider(props.getProjectRootDir(), props.getRepositories(), props);
+                                remoteRepositoryProvider.switchToVersionAndPropagateDeletes(OConsts.FILE_PROJECT, null);
                                 restoreOnFail = FileUtil.backupFile(projectFile);
                                 // Overwrite omegat.project
-                                remoteRepositoryProvider.copyFilesFromRepoToProject(OConsts.FILE_PROJECT);
+                                remoteRepositoryProvider.copyFilesFromReposToProject(OConsts.FILE_PROJECT);
                                 // Reload project properties
                                 props = ProjectFileStorage.loadProjectProperties(projectRootFolder.getAbsoluteFile());
-                                if (props.getRepositories() == null) { // We have a 3.6 style project,
+                                /*
+                                 * Repositories with a project by default have no mapping. When they are downloaded,
+                                 * the mapping is added locally.
+                                 * Every time we reopen the project, and we copy omegat.project from the remote project,
+                                 * we lose the locally defined mapping(s). We need to restore them and save the updated
+                                 * omegat.properties to disk.
+                                 * If the repository already contains the omegat.project file with mappings, then we
+                                 * use those. Local changes are overwritten like any other setting.
+                                 */
+                                if (props.getRepositories() == null) { // We have a project without mappings
                                     props.setRepositories(repos);      // so we restore the mapping we just lost
                                     needToSaveProperties = true;
                                 }
@@ -590,7 +602,7 @@ public final class ProjectUICommands {
         final ProjectProperties props = Core.getProject().getProjectProperties();
 
         new SwingWorker<Void, Void>() {
-            int previousCurEntryNum = Core.getEditor().getCurrentEntryNumber();
+            final int previousCurEntryNum = Core.getEditor().getCurrentEntryNumber();
 
             protected Void doInBackground() throws Exception {
                 IMainWindow mainWindow = Core.getMainWindow();
@@ -741,7 +753,7 @@ public final class ProjectUICommands {
         }
 
         new SwingWorker<Void, Void>() {
-            int previousCurEntryNum = Core.getEditor().getCurrentEntryNumber();
+            final int previousCurEntryNum = Core.getEditor().getCurrentEntryNumber();
 
             protected Void doInBackground() throws Exception {
                 Core.executeExclusively(true, () -> {
@@ -997,7 +1009,7 @@ public final class ProjectUICommands {
         public boolean isCanceled() {
             return isCanceled;
         }
-    };
+    }
 
     /**
      * Imports the file/files/folder into project's source files.
@@ -1021,7 +1033,7 @@ public final class ProjectUICommands {
     public static void doWikiImport() {
         String remoteUrl = JOptionPane.showInputDialog(Core.getMainWindow().getApplicationFrame(),
                 OStrings.getString("TF_WIKI_IMPORT_PROMPT"),
-                OStrings.getString("TF_WIKI_IMPORT_TITLE"), JOptionPane.OK_CANCEL_OPTION);
+                OStrings.getString("TF_WIKI_IMPORT_TITLE"), JOptionPane.WARNING_MESSAGE);
         String projectsource = Core.getProject().getProjectProperties().getSourceRoot();
         if (remoteUrl == null || remoteUrl.trim().isEmpty()) {
             // [1762625] Only try to get MediaWiki page if a string has been entered

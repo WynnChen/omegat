@@ -1,18 +1,92 @@
 ----------------------------------------------------------------------
- OmegaT 5.4.0
+ OmegaT 5.5.0
 ----------------------------------------------------------------------
   0 Enhancements
   0 Bug fixes
   0 Localisation updates
 ----------------------------------------------------------------------
+5.5.0 vs 5.4.0
+
+----------------------------------------------------------------------
+ OmegaT 5.4.0 (2020-12-12)
+----------------------------------------------------------------------
+  7 Enhancements
+  8 Bug fixes
+  10 Localisation updates
+----------------------------------------------------------------------
 5.4.0 vs 5.3.0
 
+  Implemented requests:
+
+  - Sync file deletions from repository to project
+  https://sourceforge.net/p/omegat/feature-requests/1499/
+
+  - Show branding in About dialog
+  https://sourceforge.net/p/omegat/feature-requests/1511/
+
+  - XLIFF: update target tag's state attribute according to
+    translation status
+  https://sourceforge.net/p/omegat/feature-requests/1506/
+
+  - Externalize default color definitions
+  https://sourceforge.net/p/omegat/feature-requests/1514/
+
+  - Remove discontinued Yandex.Translate MT connector
+  https://sourceforge.net/p/omegat/feature-requests/1522/
+
+  - Show comment/property value when search result comes from comment or other property
+  https://sourceforge.net/p/omegat/feature-requests/1054/
+
+  - Allow dictionary LingoDSL format with DictZip compression
+  https://sourceforge.net/p/omegat/feature-requests/1528/
+
+  - Support LingoDSL dictionaries with UTF-8 encoding
+  https://sourceforge.net/p/omegat/feature-requests/1530/
+
+  Bug fixes:
+
+  - Cannot create new team project in bare repository
+  https://sourceforge.net/p/omegat/bugs/1005/
+
+  - Leading whitespace not trimmed in HTML filter
+  https://sourceforge.net/p/omegat/bugs/1006/
+
+  - HTML filter whitespace handling errors
+  https://sourceforge.net/p/omegat/bugs/1007/
+
+  - Too many glossary hits on right click lead to them displayed off screen
+  https://sourceforge.net/p/omegat/bugs/1009/
+
+  - Wrong background color in dark mode on Linux Mint
+  https://sourceforge.net/p/omegat/bugs/1013/
+
+  - Project Files table does not respect LAF colors
+  https://sourceforge.net/p/omegat/bugs/1016/
+
+  - Team project that uses a mapping to a remote sub directory silently fails to commit local changes
+  https://sourceforge.net/p/omegat/bugs/1019/
+
+  - Status label too small on HiDPI screens
+  https://sourceforge.net/p/omegat/bugs/1026/
+
+  Localisation Updates:
+
+  - Belarusian localisation updated to 5.4.0 (UI, scripts, readme, documentation)
+  - Catalan localisation updated to 5.4.0 (UI, Instant Start, readme, scripts)
+  - Corsican localisation updated to 5.4.0 (UI)
+  - Dutch localisation updated to 5.4.0 (UI, scripts, documentation)
+  - Finnish localisation updated to 5.4.0 (UI, documentation)
+  - Japanese localisation updated to 5.4.0 (UI, scripts, readme, documentation)
+  - Russian localisation updated to 5.4.0 (UI, scripts, readme)
+  - Simplified Chinese localisation updated to 5.4.0 (UI, documentation)
+  - Turkish localisation updated to 5.4.0 (UI, Instant Start, readme, scripts)
+  - Ukrainian localisation updated to 5.4.0 (UI)
 
 ----------------------------------------------------------------------
  OmegaT 5.3.0 (2020-08-03)
 ----------------------------------------------------------------------
   6 Enhancements
-  9 Bug fixes
+  10 Bug fixes
   10 Localisation updates
 ----------------------------------------------------------------------
 5.3.0 vs 5.2.0
@@ -40,7 +114,10 @@
   Bug fixes:
 
   - application_startup event could fail to execute scripts
-  https://sourceforge.net/p/omegat/bugs/860
+  https://sourceforge.net/p/omegat/bugs/860/
+
+  - UI language selected during update on Windows not taking effect
+  https://sourceforge.net/p/omegat/bugs/904/
 
   - Fix wrong translated word from 'Term' in `Bundle_ko.properties`
   https://sourceforge.net/p/omegat/bugs/939/

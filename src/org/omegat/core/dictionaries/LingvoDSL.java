@@ -26,14 +26,22 @@
 
 package org.omegat.core.dictionaries;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.omegat.util.Language;
 
 /**
@@ -44,6 +52,7 @@ import org.omegat.util.Language;
  *
  * @author Alex Buloichik (alex73mail@gmail.com)
  * @author Aaron Madlon-Kay
+ * @author Hiroshi Miura
  */
 public class LingvoDSL implements IDictionaryFactory {
     protected static final Pattern RE_SKIP = Pattern.compile("\\[.+?\\]");
@@ -51,7 +60,7 @@ public class LingvoDSL implements IDictionaryFactory {
 
     @Override
     public boolean isSupportedFile(File file) {
-        return file.getPath().endsWith(".dsl");
+        return file.getPath().endsWith(".dsl") || file.getPath().endsWith(".dsl.dz");
     }
 
     @Override
@@ -61,48 +70,62 @@ public class LingvoDSL implements IDictionaryFactory {
 
     @Override
     public IDictionary loadDict(File file, Language language) throws Exception {
-        return new LingvoDSLDict(loadData(file, language));
-    }
-
-    private static DictionaryData<String> loadData(File file, Language language) throws Exception {
-        DictionaryData<String> data = new DictionaryData<>(language);
-        StringBuilder word = new StringBuilder();
-        StringBuilder trans = new StringBuilder();
-        Files.lines(file.toPath(), StandardCharsets.UTF_16).filter(line -> !line.isEmpty() && !line.startsWith("#"))
-                .map(line -> RE_SKIP.matcher(line).replaceAll("")).forEach(line -> {
-                    if (Character.isWhitespace(line.codePointAt(0))) {
-                        trans.append(line.trim()).append('\n');
-                    } else {
-                        if (word.length() > 0) {
-                            data.add(word.toString(), trans.toString());
-                            word.setLength(0);
-                            trans.setLength(0);
-                        }
-                        word.append(line);
-                    }
-                });
-        if (word.length() > 0) {
-            data.add(word.toString(), trans.toString());
-        }
-        data.done();
-        return data;
+        return new LingvoDSLDict(file, language);
     }
 
     static class LingvoDSLDict implements IDictionary {
         protected final DictionaryData<String> data;
 
-        LingvoDSLDict(DictionaryData<String> data) throws Exception {
-            this.data = data;
+        LingvoDSLDict(File file, Language language) throws Exception {
+            data = new DictionaryData<>(language);
+            readDslFile(file);
+        }
+
+        private void readDslFile(File file) throws IOException {
+            try (FileInputStream fis = new FileInputStream(file)) {
+                // Un-gzip if necessary
+                InputStream is = file.getName().endsWith(".dz") ? new GZIPInputStream(fis, 8192) : fis;
+                try (BOMInputStream bis = new BOMInputStream(is)) {
+                    // Detect charset
+                    Charset charset = bis.hasBOM() ? StandardCharsets.UTF_8 : StandardCharsets.UTF_16;
+                    try (InputStreamReader isr = new InputStreamReader(bis, charset);
+                            BufferedReader reader = new BufferedReader(isr)) {
+                        loadData(reader.lines());
+                    }
+                }
+            }
+        }
+
+        private void loadData(Stream<String> stream) {
+            StringBuilder word = new StringBuilder();
+            StringBuilder trans = new StringBuilder();
+            stream.filter(line -> !line.isEmpty() && !line.startsWith("#"))
+                    .map(line -> RE_SKIP.matcher(line).replaceAll("")).forEach(line -> {
+                if (Character.isWhitespace(line.codePointAt(0))) {
+                    trans.append(line.trim()).append('\n');
+                } else {
+                    if (word.length() > 0) {
+                        data.add(word.toString(), trans.toString());
+                        word.setLength(0);
+                        trans.setLength(0);
+                    }
+                    word.append(line);
+                }
+            });
+            if (word.length() > 0) {
+                data.add(word.toString(), trans.toString());
+            }
+            data.done();
         }
 
         @Override
-        public List<DictionaryEntry> readArticles(String word) throws Exception {
+        public List<DictionaryEntry> readArticles(String word) {
             return data.lookUp(word).stream().map(e -> new DictionaryEntry(e.getKey(), e.getValue()))
                     .collect(Collectors.toList());
         }
 
         @Override
-        public List<DictionaryEntry> readArticlesPredictive(String word) throws Exception {
+        public List<DictionaryEntry> readArticlesPredictive(String word) {
             return data.lookUpPredictive(word).stream().map(e -> new DictionaryEntry(e.getKey(), e.getValue()))
                     .collect(Collectors.toList());
         }

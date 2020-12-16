@@ -59,8 +59,8 @@ import org.omegat.util.Log;
 import org.omegat.util.OStrings;
 import org.omegat.util.Preferences;
 import org.omegat.util.StaticUtils;
-import org.omegat.util.gui.DockingUI;
 import org.omegat.util.gui.StaticUIUtils;
+import org.omegat.util.gui.UIDesignManager;
 import org.openide.awt.Mnemonics;
 
 import com.vlsolutions.swing.docking.DockingDesktop;
@@ -104,8 +104,6 @@ public final class MainWindowUI {
      * Create docking desktop panel.
      */
     public static DockingDesktop initDocking(final MainWindow mainWindow) {
-        DockingUI.initialize();
-
         mainWindow.desktop = new DockingDesktop();
         mainWindow.desktop.addDockableStateWillChangeListener(new DockableStateWillChangeListener() {
             public void dockableStateWillChange(DockableStateWillChangeEvent event) {
@@ -193,7 +191,12 @@ public final class MainWindowUI {
         mainWindow.lengthLabel = new JLabel();
         mainWindow.lockInsertLabel = new JLabel();
 
-        mainWindow.statusLabel.setFont(mainWindow.statusLabel.getFont().deriveFont(11f));
+        // Derive small label point size relative to default size; don't hard-code a
+        // point size because it will be wrong for e.g. HiDPI cases.
+        // Factor of 0.85 is based on old assumptions of 13pt default and 11pt small.
+        Font defaultFont = mainWindow.statusLabel.getFont();
+        float smallFontSize = defaultFont.getSize() * 0.85f;
+        mainWindow.statusLabel.setFont(defaultFont.deriveFont(smallFontSize));
 
         Border border = UIManager.getBorder("OmegaTStatusArea.border");
 
@@ -272,7 +275,7 @@ public final class MainWindowUI {
         // Ensure any "closed" Dockables are visible. These can be newly added
         // panes not included in an older layout file, or e.g. panes installed by
         // plugins.
-        DockingUI.ensureDockablesVisible(mainWindow.desktop);
+        UIDesignManager.ensureDockablesVisible(mainWindow.desktop);
     }
 
     /**

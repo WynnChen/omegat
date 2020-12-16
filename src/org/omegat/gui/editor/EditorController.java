@@ -117,10 +117,10 @@ import org.omegat.util.OStrings;
 import org.omegat.util.Preferences;
 import org.omegat.util.StaticUtils;
 import org.omegat.util.StringUtil;
-import org.omegat.util.gui.DockingUI;
 import org.omegat.util.gui.DragTargetOverlay;
 import org.omegat.util.gui.DragTargetOverlay.IDropInfo;
 import org.omegat.util.gui.StaticUIUtils;
+import org.omegat.util.gui.UIDesignManager;
 import org.omegat.util.gui.UIThreadsUtil;
 
 import com.vlsolutions.swing.docking.DockingDesktop;
@@ -365,7 +365,7 @@ public class EditorController implements IEditor {
 
         mw.addDockable(pane);
 
-        DockingDesktop desktop = DockingUI.getDesktop(pane);
+        DockingDesktop desktop = UIDesignManager.getDesktop(pane);
         if (desktop != null) {
             desktop.addDockableSelectionListener(e -> dockableSelected = pane == e.getSelectedDockable());
         }
@@ -1024,7 +1024,7 @@ public class EditorController implements IEditor {
         if (progressMode == MainWindowUI.StatusBarMode.DEFAULT) {
             StringBuilder pMsg = new StringBuilder(1024).append(" ");
             pMsg.append(translatedInFile).append("/").append(fi.entries.size()).append(" (")
-                    .append(stat.numberofTranslatedSegments).append("/").append(stat.numberOfUniqueSegments)
+                    .append(stat.numberOfTranslatedSegments).append("/").append(stat.numberOfUniqueSegments)
                     .append(", ").append(stat.numberOfSegmentsTotal).append(") ");
             mw.showProgressMessage(pMsg.toString());
         } else {
@@ -1039,9 +1039,9 @@ public class EditorController implements IEditor {
             String message = StringUtil.format(OStrings.getString("MW_PROGRESS_DEFAULT_PERCENTAGE"),
                     (translatedUniqueInFile == 0) ? "0%" : nfPer.format((double) translatedUniqueInFile / uniqueInFile),
                     uniqueInFile - translatedUniqueInFile,
-                    (stat.numberofTranslatedSegments == 0) ? "0%"
-                            : nfPer.format((double) stat.numberofTranslatedSegments / stat.numberOfUniqueSegments),
-                    stat.numberOfUniqueSegments - stat.numberofTranslatedSegments, stat.numberOfSegmentsTotal);
+                    (stat.numberOfTranslatedSegments == 0) ? "0%"
+                            : nfPer.format((double) stat.numberOfTranslatedSegments / stat.numberOfUniqueSegments),
+                    stat.numberOfUniqueSegments - stat.numberOfTranslatedSegments, stat.numberOfSegmentsTotal);
 
             mw.showProgressMessage(message);
         }
@@ -1187,6 +1187,7 @@ public class EditorController implements IEditor {
         }
 
         boolean defaultTranslation = sb.isDefaultTranslation();
+        boolean isNewDefaultTrans = defaultTranslation && !oldTE.defaultTranslation;
         boolean isNewAltTrans = !defaultTranslation && oldTE.defaultTranslation;
         boolean translationChanged = !Objects.equals(oldTE.translation, newen.translation);
         boolean noteChanged = !StringUtil.nvl(oldTE.note, "").equals(StringUtil.nvl(newen.note, ""));
@@ -1194,7 +1195,7 @@ public class EditorController implements IEditor {
         if (!isNewAltTrans && !translationChanged && noteChanged) {
             // Only note was changed, and we are not making a new alt translation.
             Core.getProject().setNote(entry, oldTE, newen.note);
-        } else if (translationChanged || noteChanged) {
+        } else if (isNewDefaultTrans || translationChanged || noteChanged) {
             while (true) {
                 // iterate before optimistic locking will be resolved
                 try {
@@ -1232,7 +1233,7 @@ public class EditorController implements IEditor {
             if (builder.ste.getSrcText().equals(entry.getSrcText())) {
                 // the same source text - need to update
                 builder.createSegmentElement(false,
-                        Core.getProject().getTranslationInfo(builder.ste));
+                        Core.getProject().getTranslationInfo(builder.ste), !defaultTranslation);
                 // then add new marks
                 markerController.reprocessImmediately(builder);
             }

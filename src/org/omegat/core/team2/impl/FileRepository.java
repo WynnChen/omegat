@@ -108,6 +108,17 @@ public class FileRepository implements IRemoteRepository2 {
     }
 
     @Override
+    public void addForDeletion(String path) throws Exception {
+        Log.logDebug(LOGGER,
+                String.format("Cannot add files for deletion for File repositories. Skipping \"%s\".", path));
+    }
+
+    @Override
+    public File getLocalDirectory() {
+        return baseDirectory;
+    }
+
+    @Override
     public String commit(String[] onVersions, String comment) throws Exception {
         Log.logDebug(LOGGER, "Commit not supported for File repositories.");
 
